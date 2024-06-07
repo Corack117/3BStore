@@ -18,9 +18,6 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = []
     serializer_class = UserSerializer
     lookup_field = 'slug'
-    def create(self, request, *args, **kwargs):
-        print("Hola")
-        return super().create(request, *args, **kwargs)
 
     def list(self, request, *args, **kwargs):
         self.permission_classes = [IsStaff]
