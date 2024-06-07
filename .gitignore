@@ -1,0 +1,49 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/env
+/dist
+/tmp
+/out-tsc
+# Only exists if Bazel was run
+/bazel-out
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+**.launch
+.settings/
+**.sublime-workspace
+**.nova
+
+# IDE - VSCode
+**.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# System Files
+**.DS_Store
+**Thumbs.db
+
+
+media/*
+!media/defaultProfile.jpg
+
+#No Commit
+secret.json
+__pycache__
+
+
+#Exceptions
+!applications/*/migrations/__init__.py
+
+/venv
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
