@@ -15,7 +15,7 @@ class UserAuthenticateSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
 class UserSerializer(serializers.ModelSerializer):
-    slug = serializers.UUIDField(read_only=True)
+    id = serializers.UUIDField(read_only=True, source='slug')
     username = serializers.CharField(required=True)
     email = serializers.CharField(required=True)
     first_name = serializers.CharField(required=True)
@@ -26,7 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'slug',
+            'id',
             'username',
             'password',
             'email',

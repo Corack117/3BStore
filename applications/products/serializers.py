@@ -23,3 +23,14 @@ class AddStockSerializer(BaseSerializer):
         instance.stock += validated_data.get('add_to_stock', 0)
         instance.save()
         return instance
+    
+class SimpleProductSerializer(BaseSerializer):
+    product_id = serializers.UUIDField(write_only=True, required=True)
+    quantity = serializers.IntegerField(min_value=1, write_only=True, required=True)
+
+    class Meta:
+        model = Product
+        fields = [
+            'product_id',
+            'quantity'
+        ]
