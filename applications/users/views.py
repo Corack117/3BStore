@@ -19,6 +19,10 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
 
     @custom_response
+    def create(self, request, *args, **kwargs):
+        return super().create(request, *args, **kwargs)
+
+    @custom_response
     @staff_required
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
@@ -81,7 +85,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def is_logged(self, request, slug = None):
         data = True
 
-        if request.user.id == None:
+        if request.user.slug == None:
             data = False
         return Response({ 'isLogged': data }, status=status.HTTP_200_OK)
     
