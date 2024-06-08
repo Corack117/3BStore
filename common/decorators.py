@@ -78,12 +78,12 @@ def wrapper_function(self, request, func, *args, **kwargs):
 
         return Response(response.data, status=result.status_code)
     except ValidationError as e:
-        messages = {str(detail) for detail in e.detail} if isinstance(e.detail, list) else [e.detail]
-        messages = [message for message in messages]
+        messages = e.detail if isinstance(e.detail, list) else [e.detail]
         data = {
             'code': e.status_code,
             'messages': messages
         }
+        print(data)
         response = CustomResponse(data=data)
         response.is_valid(raise_exception=True)
         return Response(response.data, status=e.status_code)
