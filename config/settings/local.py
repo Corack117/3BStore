@@ -1,4 +1,5 @@
 import os
+import mongoengine
 from .base import *
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -21,3 +22,11 @@ DATABASES = {
         'PORT': os.getenv('POSTGRES_PORT') if os.getenv('POSTGRES_PORT') else ''
     }
 }
+
+MONGO_USER = os.getenv('MONGO_USER') if os.getenv('MONGO_USER') else ''
+MONGO_PASSWORD = os.getenv('MONGO_PASSWORD') if os.getenv('MONGO_PASSWORD') else ''
+MONGO_HOST = os.getenv('MONGO_HOST') if os.getenv('MONGO_HOST') else ''
+MONGO_PORT = os.getenv('MONGO_PORT') if os.getenv('MONGO_PORT') else ''
+MONGO_DB = os.getenv('MONGO_DB') if os.getenv('MONGO_DB') else ''
+
+mongoengine.connect(db=MONGO_DB, host=MONGO_HOST, username=MONGO_USER, password=MONGO_PASSWORD, port=int(MONGO_PORT))
