@@ -15,3 +15,10 @@ RUN pip install -U pip && \
     pip install --no-cache-dir -r /tmp/requirements/dev.txt
 
 COPY . .
+
+# Add wait-for-it.sh
+COPY ./compose/local/wait-for-it.sh /wait-for-it.sh
+RUN chmod +x /wait-for-it.sh
+
+# Run Django management commands and then start the server
+CMD ["/wait-for-it.sh", "postgres_db:5432", "--", "sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]

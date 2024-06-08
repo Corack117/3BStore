@@ -8,7 +8,6 @@ services:
       context: .
       dockerfile: ./compose/local/Dockerfile
     working_dir: /src
-    command: python manage.py runserver 0.0.0.0:8000
     environment:
       DEBUG: 1
     volumes:
@@ -17,6 +16,8 @@ services:
       - "8000:8000"
     env_file:
       - ./compose/local/.env
+    depends_on:
+      - postgres_db
   postgres_db:
     image: postgres:latest
     container_name: 3b_store_db 
