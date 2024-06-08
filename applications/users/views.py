@@ -9,7 +9,7 @@ from .models import *
 from .serializers import *
 from .exceptions import InvalidCredentials
 from common.permissions import IsStaff
-from common.decorators import custom_action, custom_response
+from common.decorators import custom_action, custom_response, staff_required
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -19,34 +19,31 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = 'slug'
 
     @custom_response
+    @staff_required
     def list(self, request, *args, **kwargs):
-        self.permission_classes = [IsStaff]
-        self.check_permissions(request)
         return super().list(request, *args, **kwargs)
 
-    @custom_response    
+    @custom_response
+    @staff_required
     def retrieve(self, request, *args, **kwargs):
-        self.permission_classes = [IsStaff]
-        self.check_permissions(request)
         return super().retrieve(request, *args, **kwargs)
 
     @custom_response    
     def update(self, request, *args, **kwargs):
         slug = kwargs.get('slug', None)
+        self.permission_classes = [IsAuthenticated]
         if not hasattr(request.user, 'slug') or str(request.user.slug) != slug:
-            self.permission_classes = [IsStaff]
-            self.check_permissions(request)
+            self.permission_classes += [IsStaff]
 
+        self.check_permissions(request)
         response = super().update(request, *args, **kwargs)
-        response.data['messages'] = ['User updated successfully.']
+        if response.status_code == status.HTTP_200_OK:
+            response.data['messages'] = ['User updated successfully.']
         return response
     
     @custom_response
+    @staff_required
     def destroy(self, request, *args, **kwargs):
-        slug = kwargs.get('slug', None)
-        if not hasattr(request.user, 'slug') or str(request.user.slug) != slug:
-            self.permission_classes = [IsStaff]
-            self.check_permissions(request)
         instance = self.get_object()
         instance.is_active = False
         instance.save()
@@ -81,7 +78,7 @@ class UserViewSet(viewsets.ModelViewSet):
         }, status=status.HTTP_200_OK)
 
     @custom_action(methods=['GET'], detail=False, url_path='is-logged') 
-    def is_logged(self, request, *args, **kwargs):
+    def is_logged(self, request, slug = None):
         data = True
 
         if request.user.id == None:
@@ -89,7 +86,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({ 'isLogged': data }, status=status.HTTP_200_OK)
     
     @custom_action(methods=['GET'], detail=False, permission_classes=[IsAuthenticated]) 
-    def me(self, request, *args, **kwargs):
+    def me(self, request, slug = None):
         instance = request.user
         serializer = self.get_serializer(instance)
         return Response(serializer.data, status=status.HTTP_200_OK)

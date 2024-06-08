@@ -4,8 +4,10 @@ from django.http import FileResponse
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
 
+from common.permissions import IsStaff
 from common.response_model import CustomResponse
 
 def custom_action(methods=None, detail=None, url_path=None, url_name=None, **kwargs):
@@ -93,3 +95,12 @@ def wrapper_function(self, request, func, *args, **kwargs):
         response = CustomResponse(data=data)
         response.is_valid(raise_exception=True)
         return Response(response.data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+def staff_required(func):
+    @wraps(func)
+    def wrapper(self, request, *args, **kwargs):
+        self.permission_classes = [IsAuthenticated, IsStaff]
+        self.check_permissions(request)
+        return func(self, request, *args, **kwargs)
+    return wrapper
