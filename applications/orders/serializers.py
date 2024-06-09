@@ -96,8 +96,26 @@ class PurchaseSerializer(CorrectCurrencySerializer):
         notificate_low_stock(product_low_stock)
         return order
 
+class TicketProductSerializer(DocumentSerializer):
+    class Meta:
+        model = ProductMongo
+        fields = [
+            'product_id',
+            'name',
+            'unit_price',
+            'quantity',
+            'subtotal'
+        ]
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data['unit_price'] = convert_to_currency(data['unit_price'])
+        data['subtotal'] = convert_to_currency(data['subtotal'])
+        return data
+
 class TicketSerializer(DocumentSerializer):
     date = DateTimeField(format='%Y-%m-%dT%H:%M:%S.%f', input_formats=['%Y-%m-%dT%H:%M:%S.%f', '%Y-%m-%dT%H:%M:%S'])
+    products = TicketProductSerializer(many=True)
 
     class Meta:
         model = PurchaseMongo
