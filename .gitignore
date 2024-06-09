@@ -32,7 +32,7 @@
 
 
 media/*
-!media/defaultProfile.jpg
+applications/*/migrations/
 
 #No Commit
 secret.json
