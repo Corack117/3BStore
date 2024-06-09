@@ -18,7 +18,9 @@ COPY . .
 
 # Add wait-for-it.sh
 COPY ./compose/local/wait-for-it.sh /wait-for-it.sh
+COPY ./compose/local/run_app.sh /run_app.sh
 RUN chmod +x /wait-for-it.sh
+RUN chmod +x /run_app.sh
 
 # Run Django management commands and then start the server
-CMD ["/wait-for-it.sh", "postgres_db:5432", "--", "sh", "-c", "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
+CMD ["/run_app.sh"]
