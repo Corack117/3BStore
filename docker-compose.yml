@@ -41,6 +41,24 @@ services:
       - '27017:27017'
     volumes:
       - mongodb_data:/data/db
+  redis:
+    image: redis:latest
+    container_name: 3b_store_redis
+    ports:
+      - '6379:6379'
+  celery:
+    build:
+      context: .
+      dockerfile: ./compose/local/Dockerfile
+    container_name: 3b_store_celery
+    working_dir: /src
+    command: celery -A config.celery_app worker --loglevel=info
+    env_file:
+      - ./compose/local/.env
+    volumes:
+      - .:/src
+    depends_on:
+      - redis
 volumes:
   postgres_db:
     driver: local
