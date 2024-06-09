@@ -59,8 +59,24 @@ class OrderViewSet(ResponseViewset):
 
         self.check_permissions(request)
         purchase = PurchaseMongo.objects.get(purchase_id=str(instance.slug), user_id=str(instance.user.slug))
-        purchase_data = json.loads(purchase.to_json())
+        purchase_data = purchase.to_mongo().to_dict()
         purchase_data = convert_bson_dates(purchase_data)
         serializer = TicketSerializer(data=purchase_data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @staff_required
+    @custom_action(methods=['GET'], detail=False, url_path='tickets')
+    def get_all_tickets(self, request):
+        query = PurchaseMongo.objects.all()
+        page = self.paginate_queryset(query)
+        if page is not None:
+            purchases_data = [convert_bson_dates(purchase.to_mongo().to_dict()) for purchase in query]
+            serializer = TicketSerializer(data=purchases_data, many=True)
+            serializer.is_valid(raise_exception=True)
+            return self.get_paginated_response(serializer.data)
+        
+        purchases_data = [convert_bson_dates(purchase.to_mongo().to_dict()) for purchase in query]
+        serializer = TicketSerializer(data=purchases_data, many=True)
         serializer.is_valid(raise_exception=True)
         return Response(serializer.data, status=status.HTTP_200_OK)

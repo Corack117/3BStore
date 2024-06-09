@@ -4,6 +4,7 @@ from rest_framework.serializers import ValidationError
 from .models import Order, OrderDetail, ProductReturn
 from .exceptions import DuplicatedProductIDs
 from applications.products.models import Product
+from config.settings.base import logger
 
 def get_products(products: list):
     product_ids = [product['product_id'] for product in products]
@@ -25,14 +26,14 @@ def convert_to_currency(value: int):
 def notificate_low_stock(product_low_stock: list[Product]):
     if len(product_low_stock) == 0:
         return
-    
-    print('----------------------------------------')
+
+    logger.info('----------------------------------------')
     for product in product_low_stock:
-        print(f'Product with low stock:')
-        print(f'ID: {product.slug}')
-        print(f'NAME: {product.name}')
-        print(f'CURRENT SOTCK: {product.stock}')
-        print('----------------------------------------')
+        logger.info(f'Product with low stock:')
+        logger.info(f'ID: {product.slug}')
+        logger.info(f'NAME: {product.name}')
+        logger.info(f'CURRENT SOTCK: {product.stock}')
+        logger.info('----------------------------------------')
 
 def validate_stock(product: Product):
     if product.stock < 10:

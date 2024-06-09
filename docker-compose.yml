@@ -52,7 +52,20 @@ services:
       dockerfile: ./compose/local/Dockerfile
     container_name: 3b_store_celery
     working_dir: /src
-    command: celery -A config.celery_app worker --loglevel=info
+    command: watchfiles celery.__main__.main --args '-A config.celery_app worker -l INFO'
+    env_file:
+      - ./compose/local/.env
+    volumes:
+      - .:/src
+    depends_on:
+      - redis
+  celery_beat:
+    build:
+      context: .
+      dockerfile: ./compose/local/Dockerfile
+    container_name: 3b_store_celery_beat
+    working_dir: /src
+    command: watchfiles celery.__main__.main --args '-A config.celery_app beat -l INFO'
     env_file:
       - ./compose/local/.env
     volumes:
