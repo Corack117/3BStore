@@ -42,7 +42,7 @@ class UserViewSet(viewsets.ModelViewSet):
         self.check_permissions(request)
         response = super().update(request, *args, **kwargs)
         if response.status_code == status.HTTP_200_OK:
-            response.data['messages'] = ['User updated successfully.']
+            response.data['response_message'] = ['User updated successfully.']
         return response
     
     @custom_response
@@ -53,7 +53,7 @@ class UserViewSet(viewsets.ModelViewSet):
         instance.save()
         return Response({ 
             'deleted': True ,
-            'messages': ['User deleted successfully.']
+            'response_message': ['User deleted successfully.']
         }, status=status.HTTP_204_NO_CONTENT)
     
     @custom_action(methods=['POST'], detail=False, authentication_classes=[])
@@ -70,7 +70,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({
             'login': True, 
             'user': serializer_response.data,
-            'messages': ['User logged in successfully.']
+            'response_message': ['User logged in successfully.']
         }, status=status.HTTP_200_OK) 
 
     @custom_action(methods=['POST'], detail=False, url_path='logout')
@@ -78,7 +78,7 @@ class UserViewSet(viewsets.ModelViewSet):
         logout(request)
         return Response({
             'logout': True,
-            'messages': ['User logged out successfully.']
+            'response_message': ['User logged out successfully.']
         }, status=status.HTTP_200_OK)
 
     @custom_action(methods=['GET'], detail=False, url_path='is-logged') 

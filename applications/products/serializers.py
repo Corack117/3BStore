@@ -14,6 +14,9 @@ class ProductSerializer(BaseSerializer):
 
 class AddStockSerializer(BaseSerializer):
     add_to_stock = serializers.IntegerField(min_value=1, write_only=True, required=True)
+    sku = serializers.CharField(read_only=True)
+    name = serializers.CharField(read_only=True)
+    price = serializers.IntegerField(read_only=True)
 
     class Meta:
         model = Product

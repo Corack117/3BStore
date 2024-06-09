@@ -83,7 +83,6 @@ def wrapper_function(self, request, func, *args, **kwargs):
             'code': e.status_code,
             'messages': messages
         }
-        print(data)
         response = CustomResponse(data=data)
         response.is_valid(raise_exception=True)
         return Response(response.data, status=e.status_code)

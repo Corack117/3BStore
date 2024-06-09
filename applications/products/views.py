@@ -42,14 +42,15 @@ class ProductViewSet(ResponseViewset):
         self.check_permissions(request)
         return super().list(request, *args, **kwargs)
 
-    @staff_required    
+    @staff_required
+    @custom_response   
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.is_active = False
         instance.save()
         return Response({ 
             'deleted': True ,
-            'messages': ['Product deleted successfully.']
+            'response_message': ['Product deleted successfully.']
         }, status=status.HTTP_204_NO_CONTENT)
     
     @staff_required
@@ -60,7 +61,7 @@ class ProductViewSet(ResponseViewset):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response({
-            'data': serializer.data,
-            'messages': ['Stock added successfully.']
+            **serializer.data,
+            'response_message': ['Stock added successfully.']
         }, status=status.HTTP_200_OK)
         
