@@ -1,3 +1,4 @@
+from datetime import datetime
 from rest_framework.serializers import ValidationError
 
 from .models import Order, OrderDetail, ProductReturn
@@ -57,3 +58,14 @@ def cancel_order_by_inssuficiente_stock(products: list[dict[str: Product | int]]
 
     notificate_low_stock([product['instance'] for product in products])
     raise ValidationError(messages)
+
+def convert_bson_dates(data):
+    for key, value in data.items():
+        if isinstance(value, dict) and '$date' in value:
+            data[key] = datetime.fromtimestamp(value['$date'] / 1000.0).isoformat()
+        elif isinstance(value, list):
+            for item in value:
+                convert_bson_dates(item)
+        elif isinstance(value, dict):
+            convert_bson_dates(value)
+    return data

@@ -1,6 +1,8 @@
 from django.db import transaction
 from rest_framework import serializers
 from common.serializers import BaseSerializer
+from rest_framework.fields import DateTimeField
+from rest_framework_mongoengine.serializers import DocumentSerializer
 
 from .constants import ErrorCode
 from .models import Order, OrderDetail
@@ -93,3 +95,17 @@ class PurchaseSerializer(CorrectCurrencySerializer):
 
         notificate_low_stock(product_low_stock)
         return order
+
+class TicketSerializer(DocumentSerializer):
+    date = DateTimeField(format='%Y-%m-%dT%H:%M:%S.%f', input_formats=['%Y-%m-%dT%H:%M:%S.%f', '%Y-%m-%dT%H:%M:%S'])
+
+    class Meta:
+        model = PurchaseMongo
+        depth = 4
+        fields = [
+            'purchase_id',
+            'user_id',
+            'products',
+            'total',
+            'date'
+        ]

@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 
+from applications.orders.utils import convert_bson_dates
 from common.decorators import custom_action, custom_response, staff_required
 from common.permissions import IsStaff
 from common.viewsets import ResponseViewset
@@ -12,7 +13,7 @@ from common.pagination import GenericPagination
 from .models import Order
 from .mongo_models import PurchaseMongo
 from .exceptions import InvalidUserData
-from .serializers import OrderSerializer, PurchaseSerializer
+from .serializers import OrderSerializer, PurchaseSerializer, TicketSerializer
 
 
 class OrderViewSet(ResponseViewset):
@@ -58,4 +59,8 @@ class OrderViewSet(ResponseViewset):
 
         self.check_permissions(request)
         purchase = PurchaseMongo.objects.get(purchase_id=str(instance.slug), user_id=str(instance.user.slug))
-        return Response(json.loads(purchase.to_json()), status=status.HTTP_200_OK)
+        purchase_data = json.loads(purchase.to_json())
+        purchase_data = convert_bson_dates(purchase_data)
+        serializer = TicketSerializer(data=purchase_data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
