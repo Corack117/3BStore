@@ -38,14 +38,14 @@ services:
       MONGO_INITDB_ROOT_USERNAME: mongo
       MONGO_INITDB_ROOT_PASSWORD: mongo123
     ports:
-      - '27017:27017'
+      - '27018:27017'
     volumes:
       - mongodb_data:/data/db
   redis:
     image: redis:latest
     container_name: 3b_store_redis
     ports:
-      - '6379:6379'
+      - '6380:6379'
   celery:
     build:
       context: .
