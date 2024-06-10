@@ -87,13 +87,16 @@ def wrapper_function(self, request, func, *args, **kwargs):
         response.is_valid(raise_exception=True)
         return Response(response.data, status=e.status_code)
     except Exception as e:
+        status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
+        if (hasattr(e, 'status_code')):
+            status_code = e.status_code
         data = {
-            'code': status.HTTP_500_INTERNAL_SERVER_ERROR,
+            'code': status_code,
             'messages': [str(e)]
         }
         response = CustomResponse(data=data)
         response.is_valid(raise_exception=True)
-        return Response(response.data, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response(response.data, status=status_code)
     
 
 def staff_required(func):
