@@ -28,4 +28,4 @@ MONGO_HOST = os.getenv('MONGO_HOST') if os.getenv('MONGO_HOST') else ''
 MONGO_PORT = os.getenv('MONGO_PORT') if os.getenv('MONGO_PORT') else ''
 MONGO_DB = os.getenv('MONGO_DB') if os.getenv('MONGO_DB') else ''
 
-mongoengine.connect(db=MONGO_DB, host=MONGO_HOST, username=MONGO_USER, password=MONGO_PASSWORD, port=int(MONGO_PORT))
+mongoengine.connect(db=MONGO_DB, host=MONGO_HOST, username=MONGO_USER, password=MONGO_PASSWORD, port=int(MONGO_PORT), uuidRepresentation='standard')
