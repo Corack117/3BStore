@@ -10,7 +10,7 @@ def get_products(products: list):
     product_ids = [product['product_id'] for product in products]
     if len(product_ids) != len(set(product_ids)):
         raise DuplicatedProductIDs()
-    return Product.objects.filter(slug__in=product_ids)
+    return Product.objects.filter(slug__in=product_ids, active=True)
 
 def get_total_of_purchase(products: list[Product], validated_data: dict):
     total = 0

@@ -45,6 +45,8 @@ class PurchaseSerializer(CorrectCurrencySerializer):
     def create(self, validated_data):
         user_id = validated_data['user_id']
         products: list[Product] = get_products(validated_data['products'])
+        if len(products) != len(validated_data['products']):
+            raise FiledToCreateOrder()
         num_products = sum([product['quantity'] for product in validated_data['products']])
         total = get_total_of_purchase(products, validated_data)
 
