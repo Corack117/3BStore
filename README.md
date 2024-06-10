@@ -21,7 +21,7 @@ Once you have Docker Desktop installed, follow these steps to set up the develop
     source venv/bin/activate
     ```
 
-3. Install the required libraries by running:
+3. Install the required libraries by running (make sure you are in the root directory):
 
     ```bash
     pip install -r ./requirements.txt
