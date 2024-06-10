@@ -103,6 +103,10 @@ If you want to run the tests, first ensure that PostgreSQL and MongoDB container
 docker compose run --rm app pytest -s
 ```
 
+## Documentation URL
+
+### https://documenter.getpostman.com/view/11608800/2sA3XLEj2S
+
 ### Note:
 
 Celery is used to check all active products to ensure they have 10 or more units in stock. If not, a logger is triggered, visible in the Celery console (if you are viewing the console in Docker) or in the shared terminal (if you ran the container from a bash).
