@@ -8,7 +8,7 @@ from applications.users.views import UserViewSet
 if settings.DEBUG:
     router = DefaultRouter()
 else:
-    round = SimpleRouter()
+    router = SimpleRouter()
 
 router.register("orders", OrderViewSet, basename='orders')
 router.register("products", ProductViewSet, basename='products')
