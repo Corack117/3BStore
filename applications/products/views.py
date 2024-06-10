@@ -16,7 +16,7 @@ from rest_framework.permissions import AllowAny
 
 
 class ProductViewSet(ResponseViewset):
-    queryset = Product.objects.all().order_by('-created', 'sku')
+    queryset = Product.objects.filter(active=True).order_by('-created', 'sku')
     pagination_class = GenericPagination
     permission_classes = []
     serializer_class = ProductSerializer
@@ -45,8 +45,8 @@ class ProductViewSet(ResponseViewset):
     @staff_required
     @custom_response   
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        instance.is_active = False
+        instance: Product = self.get_object()
+        instance.active = False
         instance.save()
         return Response({ 
             'deleted': True ,

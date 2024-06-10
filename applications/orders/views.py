@@ -47,7 +47,6 @@ class OrderViewSet(ResponseViewset):
         return Response(serializer.data)
     
     @staff_required
-    @custom_response
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
     

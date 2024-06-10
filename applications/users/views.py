@@ -13,7 +13,7 @@ from common.decorators import custom_action, custom_response, staff_required
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all().order_by('email')
+    queryset = User.objects.filter(is_active=True).order_by('email')
     permission_classes = []
     serializer_class = UserSerializer
     lookup_field = 'slug'
@@ -85,7 +85,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def is_logged(self, request, slug = None):
         data = True
 
-        if request.user.slug == None:
+        if not hasattr(request.user, 'slug'):
             data = False
         return Response({ 'isLogged': data }, status=status.HTTP_200_OK)
     
