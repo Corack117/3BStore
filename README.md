@@ -49,8 +49,14 @@ Please note that it might take a little while for the Django application to full
 
 The project includes a preloaded backup. To restore it, make sure you are in the root directory of the project and run:
 
+On Linux/macOS
 ```bash
 docker exec -i 3b_store_db psql -U postgres -d Store < ./compose/local/backup.sql
+```
+
+On Windows
+```bash
+type .\compose\local\backup.sql | docker exec -i 3b_store_db psql -U postgres -d Store
 ```
 
 The backup includes 10 preloaded products and two users:
